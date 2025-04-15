@@ -1,0 +1,23 @@
+name: Welcome Message
+
+on:
+  issues:
+    types: [opened]
+  pull_request:
+    types: [opened]
+
+jobs:
+  welcome:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Send a welcome message
+        uses: actions/github-script@v6
+        with:
+          script: |
+            const issueOrPr = context.payload.issue || context.payload.pull_request;
+            const message = `👋 Hello @${issueOrPr.user.login}, thanks for contributing! We appreciate your effort. 🚀`;
+            await github.rest.issues.createComment({
+              ...context.repo,
+              issue_number: issueOrPr.number,
+              body: message
+            });
